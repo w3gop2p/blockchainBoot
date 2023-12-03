@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"crypto/sha256"
 	"encoding/binary"
+	"fmt"
 	"github.com/w3gop2p/blockchainBoot/types"
 	"io"
 )
@@ -58,12 +59,13 @@ type Block struct {
 
 func (b *Block) Hash() types.Hash {
 	buf := &bytes.Buffer{}
-	b.Header.EncodeBinary(buf)
+	if err := b.Header.EncodeBinary(buf); err != nil {
+		fmt.Println(err)
+	}
 
 	if b.hash.IsZero() {
 		b.hash = types.Hash(sha256.Sum256(buf.Bytes()))
 	}
-
 	return b.hash
 }
 
